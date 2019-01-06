@@ -1,10 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: sirius
-  Date: 1/5/19
-  Time: 2:40 PM
-  To change this template use File | Settings | File Templates.
---%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -13,18 +7,17 @@
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-<style>
-    #insert {
-        height: 40vh;
-    }
-</style>
+    <style>
+        #insertModel textarea {
+            height: 20vh;
+        }
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-
-            <span class="navbar-brand">New Article</span>
+            <span class="navbar-brand">Article SQL</span>
         </div>
     </div>
 </nav>
@@ -38,31 +31,37 @@
                     <input type="text" class="form-control" id="title" name="title" placeholder="Title">
                 </div>
                 <div class="form-group">
-                    <label for="meta_title">Meta Title</label>
-                    <input type="text" class="form-control" id="meta_title" name="meta_title" placeholder="Meta Title">
+                    <label for="metaTitle">Meta Title</label>
+                    <input type="text" class="form-control" id="metaTitle" name="metaTitle" placeholder="Meta Title">
                 </div>
                 <div class="form-group">
-                    <label for="meta_description">Meta Description</label>
-                    <input type="meta_description" class="form-control" id="meta_description" name="meta_description"
+                    <label for="metaDescription">Meta Description</label>
+                    <input type="metaDescription" class="form-control" id="metaDescription" name="metaDescription"
                            placeholder="Meta Description">
                 </div>
                 <div class="form-group">
                     <label for="title">Slug</label>
-                    <input type="text" class="form-control" id="slug" name="slug" placeholder="Title">
+                    <input type="text" class="form-control" id="slug" name="slug" placeholder="Slug">
                 </div>
                 <div class="form-group">
                     <label for="summary">Summary</label>
                     <input type="text" class="form-control" id="summary" name="summary" placeholder="Summary">
                 </div>
                 <div class="form-group">
+                    <label for="title">Images</label>
+                    <input type="text" class="form-control" id="images" name="images"
+                           placeholder="Images (Comma seperated list)">
+                </div>
+                <div class="form-group">
                     <label for="content">Content</label>
                     <textarea class="form-control" name="content" id="content" rows="10"></textarea>
                 </div>
                 <div class="form-group">
-                    <button type="button" class="btn btn-info" onclick="callServlet();">Create Article</button>
+                    <button type="button" class="btn btn-info" onclick="callServlet();">View Article SQL</button>
                 </div>
             </form>
-            <div class="modal fade" id="insertModel" tabindex="-1" role="dialog" aria-labelledby="insertModelTitle" aria-hidden="true">
+            <div class="modal fade" id="insertModel" tabindex="-1" role="dialog" aria-labelledby="insertModelTitle"
+                 aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -72,7 +71,14 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <textarea readonly id="insert" class="form-control" cols="10"></textarea>
+                            <div class="form-group">
+                                <label for="insert">Article Insert</label>
+                                <textarea readonly id="insert" class="form-control" cols="10"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="images_insert">Image Inserts</label>
+                                <textarea readonly id="images_insert" class="form-control" cols="10"></textarea>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -94,18 +100,21 @@
         crossorigin="anonymous"></script>
 <script>
     CKEDITOR.replace('content');
+
     function callServlet() {
         $("#content").html(CKEDITOR.instances.content.getData());
         $("#articleSubmit").submit();
     }
-    $( "#articleSubmit" ).submit(function( event ) {
+
+    $("#articleSubmit").submit(function (event) {
         event.preventDefault();
         $.ajax({
             type: "POST",
             url: "/article",
-            data: $( this ).serialize(),
-            success: function(response) {
-                $("#insert").html(response.insert_string);
+            data: $(this).serialize(),
+            success: function (response) {
+                $("#insert").html(response.insert);
+                $("#images_insert").html(response.images_insert);
                 $('#insertModel').modal()
             }
         });
