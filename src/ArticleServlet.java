@@ -19,15 +19,14 @@ public class ArticleServlet extends HttpServlet {
         article.setMetaTitle(request.getParameter("metaTitle"));
         article.setContent(request.getParameter("content"));
         article.setImages(request.getParameter("images"));
+        String[] isPage = request.getParameterValues("is_page");
+        article.setPage(!(isPage == null));
+        article.setUrl(request.getParameter("url"));
 
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
         out.print(buildJsonString(article));
         out.flush();
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
     }
 
     protected String buildJsonString(Article article) {

@@ -22,8 +22,8 @@ public class ArticleImage implements Insertable {
 
     public String getInsertHtml()
     {
-        return String.format("INSERT INTO article_images (insert_time, article_id, image_file) VALUES " +
-                "to_char(current_timestamp, YYYY-MM-DD HH24:MI:SS')::timestamp," + //insert_time
+        return String.format("INSERT INTO article_images (insert_time, article_id, image_file) VALUES (" +
+                "to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')::timestamp," + //insert_time
                 "currval('article_id_seq')," + //article_id
                 "'%s');",
                 this.getName()

@@ -4,10 +4,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import javax.swing.text.html.HTMLEditorKit;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Article implements Insertable {
     protected String title;
@@ -17,6 +14,8 @@ public class Article implements Insertable {
     protected String summary;
     protected ArrayList<ArticleImage> images = new ArrayList<ArticleImage>();
     protected Document content;
+    protected boolean isPage = false;
+    protected String url;
 
     public String getTitle() {
         return title;
@@ -79,7 +78,7 @@ public class Article implements Insertable {
     public String getInsertHtml() {
         return String.format("INSERT INTO article VALUES (nextval('article_id_seq'::regclass), " +
                         "1, " + // active
-                        "to_char(current_timestamp, YYYY-MM-DD HH24:MI:SS')::timestamp," + // insert_time
+                        "to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')::timestamp," + // insert_time
                         "'%s'," + //title
                         "'%s'," + //slug
                         "'%s'," + //summary
@@ -87,30 +86,23 @@ public class Article implements Insertable {
                         "'%s'," + // metaTitle
                         "'%s'," + // metaDescription
                         "'', " +
-                        "to_char(current_timestamp, YYYY-MM-DD HH24:MI:SS')::timestamp," + // modified_time
+                        "to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')::timestamp," + // modified_time
                         "NULL," +
-                        "false," + // is_page
-                        "'');",
+                        "%s" +
+                        "'%s');",
                 this.getTitle(),
                 this.getSlug(),
                 this.getSummary(),
                 this.getContent().replace("'", "''"),
                 this.getMetaTitle(),
-                this.getMetaDescription()
+                this.getMetaDescription(),
+                this.isPage() ? "true," :"false,",
+                this.getUrl() != null ? this.getUrl() : this.getSlug()
         );
     }
 
     public ArrayList<ArticleImage> getImages() {
         return images;
-    }
-
-    public String getImagesInsert() {
-        ArrayList<String> insertStatements = new ArrayList<String>();
-        String insertString = "";
-        for (ArticleImage image : this.images) {
-            insertString = insertString + image.getInsertHtml() + "\n";
-        }
-        return insertString;
     }
 
     public void setImages(String images) {
@@ -122,5 +114,30 @@ public class Article implements Insertable {
         for (String element : elements) {
             this.images.add(new ArticleImage(element.trim()));
         }
+    }
+
+    public String getImagesInsert() {
+        ArrayList<String> insertStatements = new ArrayList<String>();
+        String insertString = "";
+        for (ArticleImage image : this.images) {
+            insertString = insertString + image.getInsertHtml() + "\n";
+        }
+        return insertString;
+    }
+
+    public boolean isPage() {
+        return isPage;
+    }
+
+    public void setPage(boolean page) {
+        isPage = page;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

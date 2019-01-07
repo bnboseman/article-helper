@@ -57,6 +57,14 @@
                     <textarea class="form-control" name="content" id="content" rows="10"></textarea>
                 </div>
                 <div class="form-group">
+                    <input type="checkbox" name="is_page" id="is_page" value="true"> Is Content A Page? <br />
+                </div>
+                <div class="form-group">
+                    <label for="url">Page URL</label>
+                    <input type="text" class="form-control" id="url" name="url"
+                           placeholder="Page URL">
+                </div>
+                <div class="form-group">
                     <button type="button" class="btn btn-info" onclick="callServlet();">View Article SQL</button>
                 </div>
             </form>
