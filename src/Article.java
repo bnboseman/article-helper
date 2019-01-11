@@ -112,7 +112,9 @@ public class Article implements Insertable {
 
         String[] elements = images.trim().split(",");
         for (String element : elements) {
-            this.images.add(new ArticleImage(element.trim()));
+            if (!element.trim().isEmpty()) {
+                this.images.add(new ArticleImage(element.trim(), this.getSlug()));
+            }
         }
     }
 
